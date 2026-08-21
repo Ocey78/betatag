@@ -28,6 +28,7 @@ Client messages:
 - `{"type":"leave_room"}`
 - `{"type":"transform","seq":1,"head":POSE,"leftHand":POSE,"rightHand":POSE}`
 - `{"type":"tag_state","tagged":true}`
+- `{"type":"cosmetics","hat":"HAT_ID","face":"FACE_ID","badge":"BADGE_ID"}`
 - `{"type":"ping","t":123}`
 
 A POSE is:
@@ -35,3 +36,6 @@ A POSE is:
 `{"position":{"x":0,"y":0,"z":0},"rotation":{"x":0,"y":0,"z":0,"w":1}}`
 
 The server keeps rooms only in RAM. Render restarts will clear active rooms.
+
+
+Cosmetics are included in room snapshots and `player_joined` messages, and updates are broadcast live with `type: "cosmetics"`.

@@ -77,7 +77,8 @@ function roomSnapshot(room) {
       id: c.id,
       name: c.name,
       color: c.color,
-      tagged: c.tagged
+      tagged: c.tagged,
+      cosmetics: c.cosmetics
     }));
 }
 
@@ -112,7 +113,13 @@ function joinRoom(client, code) {
   });
 
   broadcast(room, "player_joined", {
-    player: { id: client.id, name: client.name, color: client.color, tagged: client.tagged }
+    player: {
+      id: client.id,
+      name: client.name,
+      color: client.color,
+      tagged: client.tagged,
+      cosmetics: client.cosmetics
+    }
   }, client.ws);
 
   return { ok: true };
@@ -156,6 +163,7 @@ wss.on("connection", ws => {
     name: "GORILLA",
     color: { r: 0.4, g: 0.7, b: 1.0 },
     tagged: false,
+    cosmetics: { hat: "", face: "", badge: "" },
     lastTransformAt: 0,
     alive: true
   };
@@ -234,6 +242,28 @@ wss.on("connection", ws => {
           id: client.id,
           tagged: client.tagged
         });
+        break;
+      }
+
+      case "cosmetics": {
+        const cleanCosmetic = value => {
+          if (typeof value !== "string") return "";
+          return value.replace(/[^A-Za-z0-9_\- .]/g, "").trim().slice(0, 64);
+        };
+
+        client.cosmetics = {
+          hat: cleanCosmetic(msg.hat),
+          face: cleanCosmetic(msg.face),
+          badge: cleanCosmetic(msg.badge)
+        };
+
+        if (client.room) {
+          const room = rooms.get(client.room);
+          if (room) broadcast(room, "cosmetics", {
+            id: client.id,
+            cosmetics: client.cosmetics
+          }, ws);
+        }
         break;
       }
 
