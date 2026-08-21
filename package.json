@@ -1,0 +1,16 @@
+{
+  "name": "betatag-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lightweight WebSocket room server for Beta Tag.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
